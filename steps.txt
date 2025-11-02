@@ -1,0 +1,9 @@
+Things i have done till now
+
+Pushed the data to mongodb.
+
+
+Things  i will need now to done
+
+Make data ingetion pipeline and get make ingestion config. first.
+
