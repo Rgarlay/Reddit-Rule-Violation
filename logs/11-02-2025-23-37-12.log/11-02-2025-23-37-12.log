@@ -1,0 +1,6 @@
+[ 2025-11-02 23:37:12,906 ] 1018 root - INFO - running egg_info
+[ 2025-11-02 23:37:12,913 ] 651 root - INFO - writing Reddit_Classification.egg-info\PKG-INFO
+[ 2025-11-02 23:37:12,915 ] 279 root - INFO - writing dependency_links to Reddit_Classification.egg-info\dependency_links.txt
+[ 2025-11-02 23:37:12,917 ] 279 root - INFO - writing top-level names to Reddit_Classification.egg-info\top_level.txt
+[ 2025-11-02 23:37:12,952 ] 203 root - INFO - reading manifest file 'Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:37:12,954 ] 332 root - INFO - writing manifest file 'Reddit_Classification.egg-info\SOURCES.txt'

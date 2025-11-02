@@ -1,0 +1,23 @@
+[ 2025-11-02 23:30:53,544 ] 1018 root - INFO - running editable_wheel
+[ 2025-11-02 23:30:53,570 ] 58 root - INFO - creating C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info
+[ 2025-11-02 23:30:53,570 ] 651 root - INFO - writing C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info\PKG-INFO
+[ 2025-11-02 23:30:53,578 ] 279 root - INFO - writing dependency_links to C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info\dependency_links.txt
+[ 2025-11-02 23:30:53,580 ] 279 root - INFO - writing top-level names to C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info\top_level.txt
+[ 2025-11-02 23:30:53,582 ] 332 root - INFO - writing manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:53,618 ] 203 root - INFO - reading manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:53,621 ] 332 root - INFO - writing manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:53,623 ] 98 root - INFO - creating 'C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\reddit_classification-0.0.1.dist-info'
+[ 2025-11-02 23:30:53,644 ] 475 root - INFO - creating C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\reddit_classification-0.0.1.dist-info\WHEEL
+[ 2025-11-02 23:30:53,678 ] 1018 root - INFO - running build_py
+[ 2025-11-02 23:30:53,682 ] 554 setuptools.command.editable_wheel - WARNING - Editable install will be performed using a meta path finder.
+
+Options like `package-data`, `include/exclude-package-data` or
+`packages.find.exclude/include` may have no effect.
+
+[ 2025-11-02 23:30:53,696 ] 204 wheel - INFO - adding '__editable___reddit_classification_0_0_1_finder.py'
+[ 2025-11-02 23:30:53,696 ] 204 wheel - INFO - adding '__editable__.reddit_classification-0.0.1.pth'
+[ 2025-11-02 23:30:53,696 ] 144 wheel - INFO - creating 'C:\Users\rgarlay\AppData\Local\Temp\pip-wheel-t8ne1isp\.tmp-odlhg5ze\reddit_classification-0.0.1-0.editable-py3-none-any.whl' and adding 'C:\Users\rgarlay\AppData\Local\Temp\tmph9a222hireddit_classification-0.0.1-0.editable-py3-none-any.whl' to it
+[ 2025-11-02 23:30:53,696 ] 204 wheel - INFO - adding 'reddit_classification-0.0.1.dist-info/METADATA'
+[ 2025-11-02 23:30:53,696 ] 204 wheel - INFO - adding 'reddit_classification-0.0.1.dist-info/WHEEL'
+[ 2025-11-02 23:30:53,696 ] 204 wheel - INFO - adding 'reddit_classification-0.0.1.dist-info/top_level.txt'
+[ 2025-11-02 23:30:53,696 ] 204 wheel - INFO - adding 'reddit_classification-0.0.1.dist-info/RECORD'

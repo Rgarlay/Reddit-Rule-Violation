@@ -1,0 +1,17 @@
+[ 2025-11-02 23:30:52,540 ] 1018 root - INFO - running egg_info
+[ 2025-11-02 23:30:52,546 ] 58 root - INFO - creating Reddit_Classification.egg-info
+[ 2025-11-02 23:30:52,546 ] 651 root - INFO - writing Reddit_Classification.egg-info\PKG-INFO
+[ 2025-11-02 23:30:52,548 ] 279 root - INFO - writing dependency_links to Reddit_Classification.egg-info\dependency_links.txt
+[ 2025-11-02 23:30:52,548 ] 279 root - INFO - writing top-level names to Reddit_Classification.egg-info\top_level.txt
+[ 2025-11-02 23:30:52,548 ] 332 root - INFO - writing manifest file 'Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:52,582 ] 203 root - INFO - reading manifest file 'Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:52,582 ] 332 root - INFO - writing manifest file 'Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:52,928 ] 1018 root - INFO - running dist_info
+[ 2025-11-02 23:30:52,937 ] 58 root - INFO - creating C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info
+[ 2025-11-02 23:30:52,939 ] 651 root - INFO - writing C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info\PKG-INFO
+[ 2025-11-02 23:30:52,943 ] 279 root - INFO - writing dependency_links to C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info\dependency_links.txt
+[ 2025-11-02 23:30:52,944 ] 279 root - INFO - writing top-level names to C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info\top_level.txt
+[ 2025-11-02 23:30:52,947 ] 332 root - INFO - writing manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:52,962 ] 203 root - INFO - reading manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:52,969 ] 332 root - INFO - writing manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\Reddit_Classification.egg-info\SOURCES.txt'
+[ 2025-11-02 23:30:52,969 ] 98 root - INFO - creating 'C:\Users\rgarlay\AppData\Local\Temp\pip-modern-metadata-w8zog1hu\reddit_classification-0.0.1.dist-info'

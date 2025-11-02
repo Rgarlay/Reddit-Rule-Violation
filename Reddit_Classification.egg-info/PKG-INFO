@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: Reddit-Classification
+Version: 0.0.1
+Summary: Reddit Rule violation classification Project using Pytorch/NLP
+Dynamic: summary
