@@ -1,8 +1,0 @@
-[ 2025-11-02 23:30:44,162 ] 1018 root - INFO - running egg_info
-[ 2025-11-02 23:30:44,168 ] 58 root - INFO - creating C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info
-[ 2025-11-02 23:30:44,169 ] 651 root - INFO - writing C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info\PKG-INFO
-[ 2025-11-02 23:30:44,172 ] 279 root - INFO - writing dependency_links to C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info\dependency_links.txt
-[ 2025-11-02 23:30:44,173 ] 279 root - INFO - writing top-level names to C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info\top_level.txt
-[ 2025-11-02 23:30:44,176 ] 332 root - INFO - writing manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info\SOURCES.txt'
-[ 2025-11-02 23:30:44,202 ] 203 root - INFO - reading manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info\SOURCES.txt'
-[ 2025-11-02 23:30:44,205 ] 332 root - INFO - writing manifest file 'C:\Users\rgarlay\AppData\Local\Temp\pip-pip-egg-info-vnvl47gn\Reddit_Classification.egg-info\SOURCES.txt'
