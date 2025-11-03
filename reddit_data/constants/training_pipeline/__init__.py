@@ -11,6 +11,7 @@ PIPELINE_NAME: str = 'reddit_violation'
 TRAIN_FILE_NAME: str = 'train.csv'
 TEST_FILE_NAME: str = 'test.csv'
 FILE_NAME: str = 'feature.csv'
+TARGET_COL: str = 'rule_violation'
 
 '''
 data ingestion constants will begin with DATA_INGESTION
