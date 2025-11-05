@@ -1,0 +1,11 @@
+columns:
+- index
+- body
+- rule
+- subreddit
+- positive_example_1
+- positive_example_2
+- negative_example_1
+- negative_example_2
+- rule_violation
+
