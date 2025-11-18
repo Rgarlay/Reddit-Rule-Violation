@@ -6,7 +6,7 @@ import os,sys
 def load_yaml_file(file_path):
     try:
         with open(file_path, 'rb') as file:
-            lines = yaml.safe_load()
+            lines = yaml.safe_load(file)
         return lines
     except Exception as e:
         raise CustomException(e,sys)
@@ -21,5 +21,4 @@ def save_yaml_file(file_path, content, replace):
             yaml.safe_dump(content,file)
     except Exception as e:
         raise CustomException(e,sys)
-    
     
