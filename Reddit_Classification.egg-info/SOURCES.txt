@@ -7,6 +7,7 @@ reddit_data/__init__.py
 reddit_data/cloud/__init__.py
 reddit_data/components/__init__.py
 reddit_data/components/ingestion.py
+reddit_data/components/transformation.py
 reddit_data/components/validation.py
 reddit_data/constants/__init__.py
 reddit_data/constants/training_pipeline/__init__.py

@@ -4,5 +4,6 @@ scikit-learn
 dotenv
 pymongo[srv]
 PyYAML
-
+torch
+transformers
 -e .
