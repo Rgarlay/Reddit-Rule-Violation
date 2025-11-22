@@ -63,6 +63,9 @@ class DataTransformationConfig:
                                                              training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
                                                              training_pipeline.DATA_TRANSFORMATION_TEST_FILE_NAME)
         
-        self.transformation_obj_file_path = os.path.join(self.data_transformation_dir,
-                                                         training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_OBJ_DIR,
-                                                         training_pipeline.PREPROCESSING_OBJECT_FILE_NAME)
+        self.transformation_obj_file_path_for_body = os.path.join(self.data_transformation_dir,
+                                                         training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
+                                                         training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_BODY)
+        self.transformation_obj_file_path_for_rule = os.path.join(self.data_transformation_dir,
+                                                         training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
+                                                         training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_RULE)

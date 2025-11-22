@@ -24,13 +24,9 @@ def save_yaml_file(file_path, content, replace):
     except Exception as e:
         raise CustomException(e,sys)
     
-def save_pickle_file(file_to_save, file_path, replace):
+def save_pickle_file(file_to_save, file_path):
     try:
-        if replace:
-            if os.path.exists(file_path):
-                os.remove(file_path)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-
         with open(file_path, 'wb') as file:
             pickle.dump(file_to_save, file)
     except Exception as e:

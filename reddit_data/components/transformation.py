@@ -10,6 +10,7 @@ import re
 from reddit_data.entity.artifact_config import DataValidationArtifact, DataTransformationArtifact
 from reddit_data.entity.entity_config import DataTransformationConfig
 import torch
+from reddit_data.utils.main_utils.transformation_utils import CleaningEmbedTransformer
 
 model_name = "bert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -20,6 +21,14 @@ class DataTransformation:
         try:
             self.data_validation_artifact = data_validation_artifact
             self.data_transformation_config = data_transformation_config
+        except Exception as e:
+            raise CustomException(e,sys)
+    
+    def importing_tokenizer_and_model(self):
+        try:
+            model_name = "bert-base-uncased"
+            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+            self.model = AutoModel.from_pretrained(model_name)
         except Exception as e:
             raise CustomException(e,sys)
     
@@ -47,80 +56,16 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e,sys)
         
-    def cleaning_text(self, dataframe_text_feature_as_list):
-        try:
-            text_file = dataframe_text_feature_as_list
-            pattern = re.compile('https?:\/\/\S+|www\.\S+|Https?:\/\/\S+|\S+\.com\S+|\S+\.com|\[.*?\]|\S+ \. com.*')
-            for i in range(len(text_file)):
-                text_file[i] = pattern.sub(r'',text_file[i])
-
-            ##Removing HTML rags
-            pattern = re.compile('<.*?>')
-            for i in range(len(text_file)):
-                text_file[i] = pattern.sub(r'',text_file[i])
-
-            ## Removing Emails and Hashtags
-            pattern = re.compile('#\S+|@\S+|\S+\@\S+|\S+@')
-            for i in range(len(text_file)):
-                text_file[i] = pattern.sub(r'',text_file[i])
-
-            ### Removing username and subreddit mentions
-            pattern = re.compile('u\/\S+|r\/\S+')
-            for i in range(len(text_file)):
-                text_file[i] = pattern.sub(r'',text_file[i])
-
-            #emotions, symbols, pictographs, transport and map symbols, flags etx.
-            pattern = re.compile("["
-                                    u"\U0001F600-\U0001F64F"  # emoticons
-                                    u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-                                    u"\U0001F680-\U0001F6FF"  # transport & map symbols
-                                    u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                                    u"\U00002702-\U000027B0"
-                                    u"\U000024C2-\U0001F251"
-                                    "]+", flags=re.UNICODE)
-            for i in range(len(text_file)):
-                text_file[i] = pattern.sub(r'',text_file[i])
-
-            ##Removing Numbers & \n spaces
-            pattern = re.compile('\d|\\n')
-            for i in range(len(text_file)):
-                text_file[i] = pattern.sub(r'',text_file[i])
-
-            return text_file
-        except Exception as e:
-            raise CustomException(e,sys)
-    
-    def embedded_text(text_feature_file, model, tokenizer, padding ,batch_size = 32):
-        try:
-            if padding == 'max_length':
-                tokenized_text = tokenizer(text_feature_file, padding ='max_length',
-                                        max_length = 193, truncation = True, return_tensors = 'pt')
-            else:
-                tokenized_text = tokenizer(text_feature_file, padding =True,
-                                        truncation = True, return_tensors = 'pt')
-            embeddings = []
-            for i in range(0, len(tokenized_text['input_ids']), batch_size):
-                batch = {k: v[i:i+batch_size].to(model.device) for k, v in tokenized_text.items()}
-                with torch.no_grad():
-                    outputs = model(**batch)
-                    # Use the embeddings of the first token (CLS token) as the sentence embedding
-                embeddings.append(outputs.last_hidden_state[:, 0, :].cpu())
-            troch_concatinated = torch.cat(embeddings, dim=0)
-            embedded_text = [emb.tolist() for emb in troch_concatinated]
-
-            return embedded_text
-        
-        except Exception as e:
-            raise CustomException(e,sys)
-        
-        
     def initiate_data_transformation(self):
         try:
-            train_file_path = self.data_transformation_config.data_transformed_train_file_path
-            test_file_path = self.data_transformation_config.data_transformed_test_file_path
+            train_file_path = self.data_validation_artifact.valid_train_file_path
+            test_file_path = self.data_validation_artifact.valid_test_file_path
 
             train_df = pd.read_csv(train_file_path)
             test_df = pd.read_csv(test_file_path)
+
+            train_df = train_df.head(20)
+            test_df = test_df.head(10)
 
             train_df_concatinated = self.taking_apart_and_concatinating(train_df)
             test_df_concatinated = self.taking_apart_and_concatinating(test_df)
@@ -129,37 +74,33 @@ class DataTransformation:
             rule_column = 'rule'
 
             train_text_file = list(train_df_concatinated[text_column])
-            train_rule_file = list(train_df_concatinated[rule_column])
-
             test_text_file = list(test_df_concatinated[text_column])
+
+            train_rule_file = list(train_df_concatinated[rule_column])
             test_rule_file = list(test_df_concatinated[rule_column])
 
+            body_cleaning_embed = CleaningEmbedTransformer(padding='max_length')
+            rule_cleaning_embed = CleaningEmbedTransformer(padding=True)
 
-            train_text_cleaned = self.cleaning_text(train_text_file)
-            test_text_cleaned = self.cleaning_text(test_text_file)
+            train_text_cleaned = body_cleaning_embed.clean_text(train_text_file)
+            test_text_cleaned = body_cleaning_embed.clean_text(test_text_file)
 
 
             ## For text
-            train_text_embedded = self.embedded_text(text_feature_file = train_text_cleaned,
-                                                                 model = model, padding = 'max_length',tokenizer=tokenizer )
-            test_text_embedded = self.embedded_text(text_feature_file = test_text_cleaned,
-                                                                 model = model, padding = 'max_length',tokenizer=tokenizer )
-        
+            train_text_embedded = body_cleaning_embed.embed_text(train_text_cleaned)
+            test_text_embedded = body_cleaning_embed.embed_text(test_text_cleaned)
 
             ## For rule
-            train_text_embedded = self.embedded_text(text_feature_file = train_text_cleaned,
-                                                                 model = model, padding = True,tokenizer=tokenizer)
-            test_text_embedded = self.embedded_text(text_feature_file = test_text_cleaned,
-                                                                 model = model, padding = True,tokenizer=tokenizer)
-        
 
-            
+            train_rule_embedded = rule_cleaning_embed.embed_text(train_rule_file)
+            test_rule_embedded = rule_cleaning_embed.embed_text(test_rule_file)
+        
 
             train_df_concatinated[text_column] = train_text_embedded
             test_df_concatinated[text_column] = test_text_embedded
 
-            train_df_concatinated[text_column] = train_rule_file
-            test_df_concatinated[rule_column] = test_rule_file
+            train_df_concatinated[rule_column] = train_rule_embedded
+            test_df_concatinated[rule_column] = test_rule_embedded
 
             dirname = os.path.dirname(self.data_transformation_config.data_transformed_train_file_path)
 
@@ -171,10 +112,17 @@ class DataTransformation:
             save_pickle_file(file_to_save = test_df_concatinated,
                              file_path=self.data_transformation_config.data_transformed_test_file_path)
             
+            save_pickle_file(file_to_save = body_cleaning_embed, 
+                             file_path = self.data_transformation_config.transformation_obj_file_path_for_body)
+            save_pickle_file(file_to_save = rule_cleaning_embed, 
+                             file_path = self.data_transformation_config.transformation_obj_file_path_for_rule)
+            
 
             data_transformation_artifact = DataTransformationArtifact(
-                train_file_path = self.data_transformation_config.data_transformed_train_file_path,
-                test_file_path = self.data_transformation_config.data_transformed_test_file_path,
+                train_obj_file_path = self.data_transformation_config.data_transformed_train_file_path,
+                test_obj_file_path = self.data_transformation_config.data_transformed_test_file_path,
+                transformed_obj_file_path_for_body_text=self.data_transformation_config.transformation_obj_file_path_for_body,
+                transformed_obj_file_path_for_rule_text=self.data_transformation_config.transformation_obj_file_path_for_rule
             )
 
             return data_transformation_artifact

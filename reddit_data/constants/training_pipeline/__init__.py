@@ -12,7 +12,8 @@ TRAIN_FILE_NAME: str = 'train.csv'
 TEST_FILE_NAME: str = 'test.csv'
 FILE_NAME: str = 'feature.csv'
 TARGET_COL: str = 'rule_violation'
-PREPROCESSING_OBJECT_FILE_NAME = "preprocessing.pkl"
+PREPROCESSING_OBJECT_FILE_NAME_FOR_BODY = "preprocessing_for_body.pkl"
+PREPROCESSING_OBJECT_FILE_NAME_FOR_RULE = "preprocessing_for_rule.pkl"
 
 
 '''
@@ -43,4 +44,4 @@ DATA_TRANSFORMATION_TEST_FILE_NAME: str = "test.npy"
 
 DATA_TRANSFORMATION_DIR_NAME: str = "data_transformation"
 DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed"
-DATA_TRANSFORMATION_TRANSFORMED_OBJ_DIR: str = "transformed_object"
+DATA_TRANSFORMATION_TRANSFORMED_OBJ_DIR_FOR_BODY: str = "transformed_object"

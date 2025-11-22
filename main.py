@@ -1,11 +1,12 @@
 from reddit_data.logging.logger import logging
 from reddit_data.exception.exception import CustomException
-from reddit_data.entity.entity_config import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig
+from reddit_data.entity.entity_config import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, DataTransformationConfig
 import os,sys
 
-from reddit_data.entity.artifact_config import DataIngestionArtifact, DataValidationArtifact
+from reddit_data.entity.artifact_config import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
 from reddit_data.components.ingestion import DataIngestion
 from reddit_data.components.validation import DataValidation 
+from reddit_data.components.transformation import DataTransformation 
 
 if __name__ == "__main__":
     try:
@@ -20,6 +21,14 @@ if __name__ == "__main__":
 
         data_validatoin_artifact = data_validatoin_initiate.initiate_data_validation()
 
-        print(data_ingestion_artiact)
+        data_transformation_config = DataTransformationConfig(training_config)
+
+        data_transformation_initiate = DataTransformation(data_validation_artifact=data_validatoin_artifact,
+                                                          data_transformation_config=data_transformation_config)
+        
+        data_transformation_artifact = data_transformation_initiate.initiate_data_transformation()
+
+
+        print(data_transformation_artifact)
     except Exception as e:
         raise CustomException(e,sys)
