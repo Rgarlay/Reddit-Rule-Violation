@@ -79,8 +79,8 @@ class DataTransformation:
             train_rule_file = list(train_df_concatinated[rule_column])
             test_rule_file = list(test_df_concatinated[rule_column])
 
-            body_cleaning_embed = CleaningEmbedTransformer(padding='max_length')
-            rule_cleaning_embed = CleaningEmbedTransformer(padding=True)
+            body_cleaning_embed = CleaningEmbedTransformer(padding='max_length', tokenizer=tokenizer, model=model)
+            rule_cleaning_embed = CleaningEmbedTransformer(padding=True, tokenizer=tokenizer, model=model)
 
             train_text_cleaned = body_cleaning_embed.clean_text(train_text_file)
             test_text_cleaned = body_cleaning_embed.clean_text(test_text_file)

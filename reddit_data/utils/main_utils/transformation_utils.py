@@ -13,11 +13,12 @@ import re
 
 class CleaningEmbedTransformer(BaseEstimator, TransformerMixin):
     
-    def __init__(self, padding='max_length', batch_size=32):
+    def __init__(self, tokenizer, model, padding='max_length', batch_size=32):
         self.padding = padding
         self.batch_size = batch_size
-        self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-        self.model = AutoModel.from_pretrained("bert-base-uncased")
+        self.tokenizer = tokenizer
+        self.model = model
+
     
     def fit(self, X, y=None):
         return self
