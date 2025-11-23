@@ -112,17 +112,10 @@ class DataTransformation:
             save_pickle_file(file_to_save = test_df_concatinated,
                              file_path=self.data_transformation_config.data_transformed_test_file_path)
             
-            save_pickle_file(file_to_save = body_cleaning_embed, 
-                             file_path = self.data_transformation_config.transformation_obj_file_path_for_body)
-            save_pickle_file(file_to_save = rule_cleaning_embed, 
-                             file_path = self.data_transformation_config.transformation_obj_file_path_for_rule)
-            
 
             data_transformation_artifact = DataTransformationArtifact(
                 train_obj_file_path = self.data_transformation_config.data_transformed_train_file_path,
-                test_obj_file_path = self.data_transformation_config.data_transformed_test_file_path,
-                transformed_obj_file_path_for_body_text=self.data_transformation_config.transformation_obj_file_path_for_body,
-                transformed_obj_file_path_for_rule_text=self.data_transformation_config.transformation_obj_file_path_for_rule
+                test_obj_file_path = self.data_transformation_config.data_transformed_test_file_path
             )
 
             return data_transformation_artifact

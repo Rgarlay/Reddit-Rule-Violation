@@ -17,7 +17,5 @@ class DataValidationArtifact:
 
 @dataclass
 class DataTransformationArtifact:
-    transformed_obj_file_path_for_body_text: str
-    transformed_obj_file_path_for_rule_text: str
     train_obj_file_path: str
     test_obj_file_path: str
