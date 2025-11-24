@@ -69,3 +69,12 @@ class DataTransformationConfig:
         self.transformation_obj_file_path_for_rule = os.path.join(self.data_transformation_dir,
                                                          training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
                                                          training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_RULE)
+        
+class ModelTrainerConfig:
+    def __init__(self, training_config: TrainingPipelineConfig):
+        self.model_trainer_dir = os.path.join(training_config.artifact_dir,training_pipeline.MODEL_TRAINER_DIR_NAME)
+
+        self.model_trained_file_path = os.path.join(self.model_trainer_dir, 
+                                                    training_pipeline.MODEL_TRAINER_TRAINED_MODEL_DIR_NAME,
+                                                    training_pipeline.MODEL_TRAINER_MODEL_NAME)
+            

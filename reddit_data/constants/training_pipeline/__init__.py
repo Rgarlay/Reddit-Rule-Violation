@@ -45,3 +45,18 @@ DATA_TRANSFORMATION_TEST_FILE_NAME: str = "test.npy"
 DATA_TRANSFORMATION_DIR_NAME: str = "data_transformation"
 DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed"
 DATA_TRANSFORMATION_TRANSFORMED_OBJ_DIR_FOR_BODY: str = "transformed_object"
+
+'''
+Model Training constants will begiin with MODEL_TRAINER
+'''
+MODEL_TRAINER_DIR_NAME: str = 'model_trainer'
+MODEL_TRAINER_TRAINED_MODEL_DIR_NAME: str = 'trained_model'
+MODEL_TRAINER_MODEL_NAME: str = 'model.pkl'
+
+
+
+
+
+
+
+

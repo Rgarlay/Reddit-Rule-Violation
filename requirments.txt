@@ -7,6 +7,7 @@ pymongo[srv]
 PyYAML
 torch
 protobuf
+git-filter-repo
 
 transformers
 -e .

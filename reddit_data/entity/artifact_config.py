@@ -19,3 +19,10 @@ class DataValidationArtifact:
 class DataTransformationArtifact:
     train_obj_file_path: str
     test_obj_file_path: str
+
+@dataclass
+class ModelTrainerArtifact:
+    train_artifact_metric: float
+    test_artifact_metric: float
+    train_model_artifact: str
+    
