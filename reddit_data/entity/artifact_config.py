@@ -22,7 +22,5 @@ class DataTransformationArtifact:
 
 @dataclass
 class ModelTrainerArtifact:
-    train_artifact_metric: float
-    test_artifact_metric: float
     train_model_artifact: str
     

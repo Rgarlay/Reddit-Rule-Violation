@@ -12,9 +12,8 @@ TRAIN_FILE_NAME: str = 'train.csv'
 TEST_FILE_NAME: str = 'test.csv'
 FILE_NAME: str = 'feature.csv'
 TARGET_COL: str = 'rule_violation'
-PREPROCESSING_OBJECT_FILE_NAME_FOR_BODY = "preprocessing_for_body.pkl"
-PREPROCESSING_OBJECT_FILE_NAME_FOR_RULE = "preprocessing_for_rule.pkl"
 
+AWS_BUCKET_NAME: str = 'aws-reddit-rule-violation-classification'
 
 '''
 data ingestion constants will begin with DATA_INGESTION

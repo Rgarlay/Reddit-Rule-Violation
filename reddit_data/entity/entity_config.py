@@ -11,6 +11,7 @@ class TrainingPipelineConfig:
         self.pipeline_name = training_pipeline.PIPELINE_NAME
         self.artifact_name = training_pipeline.ARTIFACT_DIR
         self.artifact_dir = os.path.join(self.artifact_name, timestamp)
+        self.model_dir = os.path.join('final_obj')
 
 
 class DataIngestionConfig:
@@ -63,12 +64,14 @@ class DataTransformationConfig:
                                                              training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
                                                              training_pipeline.DATA_TRANSFORMATION_TEST_FILE_NAME)
         
-        self.transformation_obj_file_path_for_body = os.path.join(self.data_transformation_dir,
-                                                         training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
-                                                         training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_BODY)
-        self.transformation_obj_file_path_for_rule = os.path.join(self.data_transformation_dir,
-                                                         training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
-                                                         training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_RULE)
+        ## Uncomment if you want to get preprocessing objects
+        
+        # self.transformation_obj_file_path_for_body = os.path.join(self.data_transformation_dir,
+        #                                                  training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
+        #                                                  training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_BODY)
+        # self.transformation_obj_file_path_for_rule = os.path.join(self.data_transformation_dir,
+        #                                                  training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
+        #                                                  training_pipeline.PREPROCESSING_OBJECT_FILE_NAME_FOR_RULE)
         
 class ModelTrainerConfig:
     def __init__(self, training_config: TrainingPipelineConfig):
@@ -77,4 +80,6 @@ class ModelTrainerConfig:
         self.model_trained_file_path = os.path.join(self.model_trainer_dir, 
                                                     training_pipeline.MODEL_TRAINER_TRAINED_MODEL_DIR_NAME,
                                                     training_pipeline.MODEL_TRAINER_MODEL_NAME)
+        self.model_trained_file_path_second = os.path.join(training_config.model_dir, 
+                                                           training_pipeline.MODEL_TRAINER_MODEL_NAME)
             

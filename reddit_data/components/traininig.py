@@ -8,11 +8,12 @@ from sklearn.model_selection import train_test_split
 
 
 from reddit_data.utils.ml_utils.main_ml_utils import ViolationDataset, ViolationClassifier
+from reddit_data.utils.ml_utils.metrics import evaluate_result
 from torch.optim import Adam
 import torch
 from torch.utils.data import DataLoader
 import torch.nn as nn
-
+import numpy as np
 
 class ModelTraining:
     def __init__(self, model_trainer_config: ModelTrainerConfig,
@@ -42,9 +43,25 @@ class ModelTraining:
                     optimizer.step()
                     total_loss += loss.item()
 
-            logging.info("Evaluating on test data...")
             model.eval()
-            correct, total = 0, 0
+            train_pred_labels = []
+            train_original_labels = []
+            logging.info("Evaluating on train data...")
+            with torch.no_grad():
+                for train_body_batch, train_rule_batch, train_labels in train_loader:
+                    
+                    # Move data to the same device as the model
+#                    body_batch, rule_batch, y_batch = body_batch.to(device), rule_batch.to(device), y_batch.to(device)
+
+                    outputs = model(train_body_batch, train_rule_batch)
+                    preds = torch.argmax(outputs, dim=1)
+                    train_pred_labels.extend(preds.numpy())
+                    train_labels = train_original_labels.extend(train_labels.numpy())
+
+            logging.info("Evaluating on test data...")            
+            
+            test_pred_labels = []
+            test_original_labels = []
             with torch.no_grad():
                 for body_batch, rule_batch, y_batch in test_loader:
                     # Move data to the same device as the model
@@ -52,30 +69,15 @@ class ModelTraining:
 
                     outputs = model(body_batch, rule_batch)
                     preds = torch.argmax(outputs, dim=1)
-                    correct += (preds == y_batch).sum().item()
-                    total += y_batch.size(0)
-            test_acc = correct / total
-            logging.info(f"Test Accuracy: {test_acc}")
 
+                    test_pred_labels.extend(preds.numpy())
+                    test_original_labels.extend(y_batch.numpy())
+            
+            evaluate_results = evaluate_result(train_labels=train_original_labels, train_pred_label=train_pred_labels,
+                                               test_labels=test_original_labels, test_pred_label=test_pred_labels)
 
-            correct, total = 0, 0
-            logging.info("Evaluating on train data...")
-            with torch.no_grad():
-                for body_batch, rule_batch, y_batch in train_loader:
-                    
-                    # Move data to the same device as the model
-#                    body_batch, rule_batch, y_batch = body_batch.to(device), rule_batch.to(device), y_batch.to(device)
-
-                    outputs = model(body_batch, rule_batch)
-                    preds = torch.argmax(outputs, dim=1)
-                    correct += (preds == y_batch).sum().item()
-                    total += y_batch.size(0)
-            train_acc = correct / total
-
-            logging.info(f"Train Accuracy: {train_acc}")
-
-            return {'Train Accuracy': train_acc,
-                       'Test Accuracy': test_acc}
+            logging.info(f'The metrics for the train parts are{evaluate_results['TRAIN METRICS']}')
+            logging.info(f'The metrics for the train parts are{evaluate_results['TEST METRICS']}')
 
         except Exception as e:
             raise CustomException(e,sys)  
@@ -117,16 +119,16 @@ class ModelTraining:
             logging.info("Initializing ViolationClassifier model...")
             model = ViolationClassifier(hidden_dim=256, dropout=0.5)
 
-            train_test_metrics = self.train_and_evaluate(model=model, train_loader=train_loader_data, test_loader=test_loader_data)
+            self.train_and_evaluate(model=model, train_loader=train_loader_data, test_loader=test_loader_data)
             
             logging.info("Saving trained model...")
             save_pickle_file(file_to_save=model,
                              file_path=self.model_trainer_config.model_trained_file_path)
             
+            save_pickle_file(file_path=self.model_trainer_config.model_trained_file_path_second, file_to_save=model)
+            
             logging.info("Creating ModelTrainerArtifact...")
-            model_trainer_artifact = ModelTrainerArtifact(train_model_artifact=self.model_trainer_config.model_trained_file_path,
-                                                          train_artifact_metric=train_test_metrics['Train Accuracy'],
-                                                          test_artifact_metric=train_test_metrics['Test Accuracy'])
+            model_trainer_artifact = ModelTrainerArtifact(train_model_artifact=self.model_trainer_config.model_trained_file_path)
             
             logging.info("Model training completed successfully.")
             return model_trainer_artifact
