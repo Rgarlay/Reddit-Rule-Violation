@@ -12,7 +12,6 @@ from reddit_data.entity.artifact_config import DataValidationArtifact, DataTrans
 from reddit_data.entity.entity_config import DataTransformationConfig
 import torch
 
-
 class DataTransformation:
     def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config:DataTransformationConfig):
         try:
