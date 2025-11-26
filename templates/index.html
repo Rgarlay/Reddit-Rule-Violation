@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FastAPI Form</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #4c88ff, #6ad0ff);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            width: 420px;
+            padding: 32px;
+            border-radius: 18px;
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+            animation: fadeIn 0.9s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 26px;
+            color: #333;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #007bff;
+            box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0px 3px 10px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background-color: #005fcc;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>🚀 Reddit Rule Violation Check</h2>
+
+        <form action="/predict" method="post">
+
+            <label for="user_text">Enter Text:</label>
+            <input type="text" id="user_text" name="user_text" required>
+
+            <label for="option">Select a Rule:</label>
+            <select id="option" name="option" required>
+                <option value="no_advertising">No Advertising: Spam, referral links, unsolicited advertising, and promotional content are not allowed.</option>
+                <option value="no_legal_advice">No legal advice: Do not offer or request legal advice.</option>
+            </select>
+
+            <button type="submit">Run</button>
+        </form>
+    </div>
+</body>
+</html>

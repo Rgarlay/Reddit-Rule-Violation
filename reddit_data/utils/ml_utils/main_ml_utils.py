@@ -71,37 +71,3 @@ class ViolationClassifier(nn.Module):
 
         out = self.fc_out(x)
         return out
-
-# Check if CUDA is available and use GPU if it is
-# model = ViolationClassifier(hidden_dim=256, dropout=0.5)# Initialize with new parameters
-
-# criterion = nn.CrossEntropyLoss()
-# optimizer = Adam(model.parameters(), lr=0.0001)
-# epochs = 25 # Define number of epochs
-
-# for epoch in range(epochs):
-#     model.train()
-#     total_loss = 0
-#     for body_batch, rule_batch, y_batch in train_loader:
-#         # Move data to the same device as the model
-# #        body_batch, rule_batch, y_batch = body_batch.to(device), rule_batch.to(device), y_batch.to(device)
-
-#         optimizer.zero_grad()
-#         outputs = model(body_batch, rule_batch)
-#         loss = criterion(outputs, y_batch)
-#         loss.backward()
-#         optimizer.step()
-#         total_loss += loss.item()
-#     model.eval()
-#     correct, total = 0, 0
-#     with torch.no_grad():
-#         for body_batch, rule_batch, y_batch in val_loader:
-#             # Move data to the same device as the model
-#             body_batch, rule_batch, y_batch = body_batch.to(device), rule_batch.to(device), y_batch.to(device)
-
-#             outputs = model(body_batch, rule_batch)
-#             preds = torch.argmax(outputs, dim=1)
-#             correct += (preds == y_batch).sum().item()
-#             total += y_batch.size(0)
-#     acc = correct / total
-#     print(f"Epoch {epoch+1}: Loss={total_loss/len(train_loader):.4f}, Accuracy={acc:.4f}")

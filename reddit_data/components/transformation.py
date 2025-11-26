@@ -2,6 +2,7 @@ from reddit_data.logging.logger import logging
 from reddit_data.exception.exception import CustomException
 import os,sys
 from reddit_data.utils.main_utils.utils import load_pickle_file, save_pickle_file
+from reddit_data.utils.main_utils.transformation_utils import CleaningEmbed
 
 import pandas as pd
 import numpy as np
@@ -12,10 +13,6 @@ from reddit_data.entity.entity_config import DataTransformationConfig
 import torch
 
 
-model_name = "bert-base-uncased"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModel.from_pretrained(model_name)
-
 class DataTransformation:
     def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config:DataTransformationConfig):
         try:
@@ -25,11 +22,9 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e,sys)
     
-    def taking_apart_and_concatinating(self, dataframe:pd.DataFrame):
+    def taking_apart_and_concatinating(self, df:pd.DataFrame):
         try:
             logging.info("Starting data concatenation")
-            df = dataframe.copy()
-            
             x_positive_1_df = df[['rule', 'positive_example_1']].rename(columns={'positive_example_1': 'body'})
             x_positive_2_df = df[['rule', 'positive_example_2']].rename(columns={'positive_example_2': 'body'})
             x_negative_1_df = df[['rule', 'negative_example_1']].rename(columns={'negative_example_1': 'body'})
@@ -50,69 +45,7 @@ class DataTransformation:
 
         except Exception as e:
             raise CustomException(e,sys)
-        
-    def clean_text(self, text_list):
-        try:
-            logging.info(f"Starting text cleaning for {len(text_list)} items")
-            cleaned_list = []
-            pattern1 = re.compile(r'https?:\/\/\S+|www\.\S+|Https?:\/\/\S+|\S+\.com\S+|\S+\.com|\[.*?\]|\S+ \. com.*')
-            pattern2 = re.compile(r'<.*?>')
-            pattern3 =  re.compile(r'#\S+|@\S+|\S+\@\S+|\S+@')
-            pattern4 = re.compile(r'u\/\S+|r\/\S+')
-            pattern5 = re.compile(r"["
-                            u"\U0001F600-\U0001F64F"  
-                            u"\U0001F300-\U0001F5FF"  
-                            u"\U0001F680-\U0001F6FF"  
-                            u"\U0001F1E0-\U0001F1FF"  
-                            u"\U00002702-\U000027B0"
-                            u"\U000024C2-\U0001F251"
-                            "]+", flags=re.UNICODE)
-            pattern6 = re.compile(r'\d|\\n')
-
-
-            for text in text_list:
-                text = pattern1.sub('', text)
-                text = pattern2.sub('', text)       ##Removing HTML rags
-                text = pattern3.sub('', text)       ## Removing Emails and Hashtags
-                text = pattern4.sub('', text)       ### Removing username and subreddit mentions
-                text = pattern5.sub('', text)       #emotions, symbols, pictographs, transport and map symbols, flags etx.
-                text = pattern6.sub('', text)       ###Removing Numbers & \n spaces
-                cleaned_list.append(text)
-
-            logging.info("Text cleaning completed")
-            return cleaned_list
-        except Exception as e:
-            raise CustomException(e,sys)
-        
-
-    def embed_text(self, text_list, padding=True):
-
-        try:
-            logging.info(f"Starting text embedding for {len(text_list)} items")
-            if padding == 'max_length':
-                tokenized = tokenizer(text_list, padding ='max_length',
-                                                    max_length = 193, truncation = True, 
-                                                    return_tensors = 'pt')
-            else:
-                tokenized = tokenizer(text_list, padding =True,
-                                        truncation = True, return_tensors = 'pt')
-
-            embeddings = []
-            self.batch_size = 32
-            with torch.no_grad():
-                for i in range(0, len(tokenized['input_ids']),self.batch_size ):
-                    batch = {k: v[i:i+self.batch_size] for k, v in tokenized.items()}
-                    output = model(**batch)
-                    embeddings.append(output.last_hidden_state[:, 0, :].cpu())
-
-            embedded_tensor = torch.cat(embeddings, dim=0)
-
-            logging.info("Embedding completed")
-            return embedded_tensor.tolist()
-        
-        except Exception as e:
-            raise CustomException(e,sys)
-        
+            
     def initiate_data_transformation(self):
         try:
 
@@ -125,8 +58,8 @@ class DataTransformation:
             train_df = pd.read_csv(train_file_path)
             test_df = pd.read_csv(test_file_path)
 
-            train_df = train_df.head(20)
-            test_df = test_df.head(10)
+            train_df = train_df.head(10)
+            test_df = test_df.head(5)
 
             logging.info("Concatenating train data")
             train_df_concatinated = self.taking_apart_and_concatinating(train_df)
@@ -141,26 +74,29 @@ class DataTransformation:
             logging.info("Cleaning test body text")
             test_text_file = list(test_df_concatinated[text_column])
 
+            clean_and_embed = CleaningEmbed()
+
             logging.info("Embedding train body text")
-            train_text_cleaned = self.clean_text(train_text_file)
+            train_text_cleaned = clean_and_embed.clean_text(train_text_file)
+            train_text_embedded = clean_and_embed.embed_text(train_text_cleaned,padding = 'max_length')
+
 
             logging.info("Embedding test body text")
-            test_text_cleaned = self.clean_text(test_text_file)
-
-            train_text_embedded = self.embed_text(text_list = train_text_cleaned,padding='max_length')
-            test_text_embedded = self.embed_text(text_list = test_text_cleaned,padding='max_length')
-
+            test_text_cleaned = clean_and_embed.clean_text(test_text_file)
+            test_text_embedded = clean_and_embed.embed_text(test_text_cleaned, padding = 'max_length')
+            
             ##Rule part
             rule_column = 'rule'
             train_rule_file = list(train_df_concatinated[rule_column])
             test_rule_file = list(test_df_concatinated[rule_column])
 
             logging.info("Embedding train rule text")
-            train_rule_embedded = self.embed_text(train_rule_file)
-            logging.info("Embedding test rule text")
-            test_rule_embedded = self.embed_text(test_rule_file)
-        
 
+            train_rule_embedded = clean_and_embed.embed_text(train_rule_file)
+
+            logging.info("Embedding test rule text")
+            test_rule_embedded = clean_and_embed.embed_text(test_rule_file)
+        
             train_df_concatinated[text_column] = train_text_embedded
             test_df_concatinated[text_column] = test_text_embedded
 

@@ -8,6 +8,8 @@ PyYAML
 torch
 protobuf
 git-filter-repo
-
+fastapi
 transformers
+uvicorn
+python-multipart
 -e .
