@@ -125,7 +125,7 @@ class ModelTraining:
             save_pickle_file(file_to_save=model,
                              file_path=self.model_trainer_config.model_trained_file_path)
             
-            save_pickle_file(file_path=self.model_trainer_config.model_trained_file_path_second, file_to_save=model)
+            torch.save(model.state_dict(), self.model_trainer_config.model_trained_file_path_second, file_to_save=model)
             
             logging.info("Creating ModelTrainerArtifact...")
             model_trainer_artifact = ModelTrainerArtifact(train_model_artifact=self.model_trainer_config.model_trained_file_path)

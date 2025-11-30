@@ -47,3 +47,6 @@ To this: - "FROM python:3.10-bookworm"
 because it has all the necessary dependencies which are needed.
 
 
+I replaced the model from my local artchitecture with the one that i trained on Google collab 
+after i made sure everything's working properly.
+

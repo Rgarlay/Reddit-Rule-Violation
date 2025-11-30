@@ -5,11 +5,9 @@ from uvicorn import run as app_run
 import pandas as pd
 import sys
 from reddit_data.utils.main_utils.transformation_utils import CleaningEmbed
-from reddit_data.utils.main_utils.utils import load_pickle_file
 import torch
 from reddit_data.exception.exception import CustomException
-
-model = load_pickle_file("final_obj/model.pkl")
+from reddit_data.utils.ml_utils.main_ml_utils import ViolationClassifier
 
 app = FastAPI()
 
@@ -47,6 +45,10 @@ async def predict(
     rule_emb = torch.tensor(embedded_rule, dtype=torch.float32)
 
     # Set model to eval
+    model = ViolationClassifier()
+    state_dict = torch.load("final_obj\model.pth", map_location="cpu")
+    model.load_state_dict(state_dict)
+    model.to("cpu")
     model.eval()
 
     with torch.no_grad():
