@@ -7,3 +7,43 @@ Things  i will need now to done
 
 Make data ingetion pipeline and get make ingestion config. first.
 
+I needed only interface code libraries for dockerimage, so install only those libraries
+in a seperate requirements file which will work for docker.
+
+Also socker build is : - "docker build -t readit_data ."
+
+docker image run is: - "docker run -p 8000:8000 reddit_project_2:latest"
+
+Running uvicorn file: - "uvicorn app:app --reload"
+
+
+Chellandge: - How do i shrink docker image?
+
+Initial Size: - 20GB
+
+Plans: - Instead of copying everything, copy only inference part.
+Make custom libraries req.txt file to import; instead of working with all that we used in the training.
+
+Trying object creation from heavy libraries instead of installing them in image to avoid including them in dockerfile.
+
+
+I used torch libraries without CUDA/GPU modules so that its size reduced considribly, shrinking image size about 5-7GB.
+
+Then i undid the Transformers dependences from the many-many libraries that reduced also its size and Then
+installed numpy and tokenizer seperately(which are needed). 
+
+
+Then i had the dependencies error from a basic logging module with "Getlogger" missing, it went like: - 
+
+```
+  LOGGER = logging.getLogger("concurrent.futures")
+AttributeError: module 'logging' has no attribute 'getLogger'
+```
+
+So, i changed 
+from" - "FROM python:3.10-slim-bookworm"
+
+To this: - "FROM python:3.10-bookworm"
+because it has all the necessary dependencies which are needed.
+
+

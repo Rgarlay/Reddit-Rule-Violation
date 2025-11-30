@@ -1,4 +1,3 @@
-from reddit_data.logging.logger import logging
 from reddit_data.exception.exception import CustomException
 import yaml
 import os,sys

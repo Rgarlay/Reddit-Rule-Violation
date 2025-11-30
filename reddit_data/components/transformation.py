@@ -1,16 +1,12 @@
 from reddit_data.logging.logger import logging
 from reddit_data.exception.exception import CustomException
 import os,sys
-from reddit_data.utils.main_utils.utils import load_pickle_file, save_pickle_file
+from reddit_data.utils.main_utils.utils import  save_pickle_file
 from reddit_data.utils.main_utils.transformation_utils import CleaningEmbed
 
 import pandas as pd
-import numpy as np
-from transformers import AutoTokenizer, AutoModel
-import re
 from reddit_data.entity.artifact_config import DataValidationArtifact, DataTransformationArtifact
 from reddit_data.entity.entity_config import DataTransformationConfig
-import torch
 
 class DataTransformation:
     def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config:DataTransformationConfig):

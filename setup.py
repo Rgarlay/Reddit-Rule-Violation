@@ -7,7 +7,7 @@ import os,sys
 def get_packages() -> list:
     try:
         packages = []
-        with open('requirments.txt','r') as file:
+        with open('requirements.txt','r') as file:
             lines = file.readlines()
         for line in lines:
             line = line.strip()

@@ -1,0 +1,29 @@
+venv/
+
+trial.ipynb
+push_data.py
+
+data_schema/
+
+# Git
+.git/
+.github/
+.gitattributes
+.gitignore
+
+
+# Model cache (optional if you want smaller image)
+huggingface_cache/
+archieve/
+
+reddit_data/logger
+reddit_data/components
+reddit_data/contants
+reddit_data/entity
+reddit_data/pipeline
+reddit_data/cloud
+
+valid_data/
+RedditReddit_Classification.egg-info/
+
+requirements.txt
