@@ -46,7 +46,44 @@ from" - "FROM python:3.10-slim-bookworm"
 To this: - "FROM python:3.10-bookworm"
 because it has all the necessary dependencies which are needed.
 
-
 I replaced the model from my local artchitecture with the one that i trained on Google collab 
 after i made sure everything's working properly.
+
+SENDING DATA TO AWS
+
+Made an directory in ECR wit name that's relevant.
+Made an EC2 instance with ubuntu and all the internet https/ given and no key-pair.
+Made a AWS KEY and SECRET KEY with IAM.
+ECR Repository URL till "/" is copied also.
+All these are added to GitHub--> Settings --> Secrets
+
+Then in a ".github\workflows\main.yml" file, Github actionsa are written.
+At last name == Container name (see it from docker desktop)".
+
+```
+Then went to EC2, started a connection and at terminal used commands:
+
+sudo apt-get update -y
+
+sudo apt-get upgrade
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+
+sudo sh get-docker.sh
+
+sudo usermod -aG docker ubuntu
+
+newgrp docker
+```
+
+Then GitHub --> Settings --> Runners --> New Linux runner.
+
+Copied and pasted till we get "waiting for deployment" part.
+
+Actions will deploy.
+
+Instance --> Security --> Inbound Rules --> Edit Inbound rules --> Edit inbound rules
+--> Added exposed port and saved.
+
+Then used ipv4 address ":8080" and then it should work.
 
