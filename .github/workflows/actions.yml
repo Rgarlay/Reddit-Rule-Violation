@@ -82,14 +82,13 @@ jobs:
 
       - name: Run Docker Image
         run: |
-            IMAGE_TAG=reddit_classification_dockerfile
-            docker rm -f redditproject || true
-            docker run -d -p 8080:8000 --ipc="host" --name=redditproject \
-              -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-              -e AWS_REGION=${{ secrets.AWS_REGION }} \
-              746669197222.dkr.ecr.us-east-1.amazonaws.com/reddit_classification_1:${IMAGE_TAG}
-              
+                IMAGE_TAG=reddit_classification_dockerfile
+                docker rm -f nervous_perlman || true
+                docker run -d -p 8080:8000 --ipc="host" --name=nervous_perlman \
+                  -e 'AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}' \
+                  -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' \
+                  -e 'AWS_REGION=${{ secrets.AWS_REGION }}' \
+                  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG}
       - name: Clean previous images
         run: |
           docker system prune -f
