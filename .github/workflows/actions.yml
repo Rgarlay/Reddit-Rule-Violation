@@ -36,9 +36,8 @@ jobs:
       - name: Build Docker Image
         run: |
           IMAGE_TAG=reddit_classification_dockerfile
-          docker build -t ${{secrets.ECR_REPOSITORY_NAME}}:${IMAGE_TAG} .
+          docker build -t ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG} .
 
-      # 🔐 Configure AWS Credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -46,50 +45,50 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 🔑 Login to AWS ECR
       - name: Login to Amazon ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
           | docker login --username AWS --password-stdin \
-            $(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+            ${{ secrets.AWS_ECR_LOGIN_URI }}
 
-      # 🚀 Tag & Push image to ECR
-      - name: Tag and Push image
+      - name: Push image to ECR
         run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
           IMAGE_TAG=reddit_classification_dockerfile
-          docker tag ${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG} \
-            $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG}
-          docker push \
-            $ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG}
+          docker push ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG}
+
 
   Continuous-Deployment:
     needs: Continuous-Delievery
     runs-on: self-hosted
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-                                                                                              
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{secrets.AWS_REGION}}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      
-      
+
       - name: Pull latest images
         run: |
-         docker pull ${{secrets.AWS_ECR_LOGIN_URI}}/${{secrets.ECR_REPOSITORY_NAME}}:reddit_classification_dockerfile
+          IMAGE_TAG=reddit_classification_dockerfile
+          docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:${IMAGE_TAG}
 
+      - name: Run Docker Image
+        run: |
+          docker rm -f redditproject || true
+          docker run -d -p 8080:8000 --ipc="host" --name=redditproject \
+            -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            -e AWS_REGION=${{ secrets.AWS_REGION }} \
+            ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:reddit_classification_dockerfile
 
-      - name: Run Docker Image to serve users
+      - name: Clean previous images
         run: |
-         docker run -d -p 8080:8000 --ipc="host" --name=redditproject -e 'AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:reddit_classification_dockerfile
-      - name: Clean previous images and containers
-        run: |
-         docker system prune -f
+          docker system prune -f
