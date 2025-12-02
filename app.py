@@ -46,7 +46,7 @@ async def predict(
 
     # Set model to eval
     model = ViolationClassifier()
-    state_dict = torch.load("final_obj\model.pth", map_location="cpu")
+    state_dict = torch.load("final_obj/model.pth", map_location="cpu")
     model.load_state_dict(state_dict)
     model.to("cpu")
     model.eval()

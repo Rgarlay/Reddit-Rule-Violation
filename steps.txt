@@ -12,7 +12,10 @@ in a seperate requirements file which will work for docker.
 
 Also socker build is : - "docker build -t readit_data ."
 
-docker image run is: - "docker run -p 8000:8000 reddit_project_2:latest"
+docker image run is: - "docker run -p 8080:8000 reddit_classification:latest" AND while running the docker 
+image in browser, you have to expost :8080; not 8000.
+
+
 
 Running uvicorn file: - "uvicorn app:app --reload"
 
@@ -87,3 +90,6 @@ Instance --> Security --> Inbound Rules --> Edit Inbound rules --> Edit inbound 
 
 Then used ipv4 address ":8080" and then it should work.
 
+
+I had changed the pytorch version that was giving my "cpu only" part, but numpy became incpompatible, so i had
+to specify a version of that as well.
