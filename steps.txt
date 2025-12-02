@@ -1,9 +1,10 @@
 Things i have done till now
 
 Pushed the data to mongodb.
-
-
 Things  i will need now to done
+
+bert-base-uncased was pulled using git pull, which can be derived from huggingface. Important components are listed in .gitignore.
+
 
 Make data ingetion pipeline and get make ingestion config. first.
 
