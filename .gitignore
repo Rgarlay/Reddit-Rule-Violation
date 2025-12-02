@@ -2,9 +2,17 @@
 venv/
 logs/
 
+
 trial.ipynb
 Reddit_Pytorch.ipynb
+bert-base-uncased/config.json
+bert-base-uncased/model.safetensors
+bert-base-uncased/pytorch_model.bin
+bert-base-uncased/tokenizer_config.json
+bert-base-uncased/tokenizer.json
+bert-base-uncased/vocab.txt
+bert-base-uncased/README.md
 
-bert-base-uncased/
 
-Different_variants.txt
+
+trail.ipynb

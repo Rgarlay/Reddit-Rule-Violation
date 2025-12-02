@@ -1,0 +1,8 @@
+I tried:
+
+
+Making an object for the entire process of body and rule cleaning, but the code 
+was importing the bert-tokenizer 2 times, so it was very heavy 2 objects that we save.
+And github was not able to push them onto the repo.
+
+Ultimately, i created no objects, but just made simple methods to work with.
