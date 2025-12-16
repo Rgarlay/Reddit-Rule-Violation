@@ -45,6 +45,12 @@ DATA_TRANSFORMATION_DIR_NAME: str = "data_transformation"
 DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed"
 DATA_TRANSFORMATION_TRANSFORMED_OBJ_DIR_FOR_BODY: str = "transformed_object"
 
+
+DATA_TRANSFORMATION_CLEANED_FILE_DIR: str = 'cleaned_text'
+DATA_TRANSFORMATION_BODY_CLEANED_FILE: str = 'body_cleaned.txt'
+DATA_TRANSFORMATION_RULE_CLEANED_FILE: str = 'rule_cleaned.txt'
+
+
 '''
 Model Training constants will begiin with MODEL_TRAINER
 '''
@@ -53,7 +59,11 @@ MODEL_TRAINER_TRAINED_MODEL_DIR_NAME: str = 'trained_model'
 MODEL_TRAINER_MODEL_NAME: str = 'model.pkl'
 
 
-
+'''
+Tokenization and vocabulary artifact will begin with TOKEN_AND_VOCAB
+'''
+TOKEN_AND_VOCAB_BODY_TOKENIZER: str = 'body_tokenizer'
+TOKEN_AND_VOCAB_RULE_TOKENIZER: str = 'rule_tokenizer'
 
 
 

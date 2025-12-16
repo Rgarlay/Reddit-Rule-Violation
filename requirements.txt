@@ -8,6 +8,7 @@ torch
 protobuf
 git-filter-repo
 fastapi
-transformers
+sentencepiece
 uvicorn
 python-multipart
+spacy

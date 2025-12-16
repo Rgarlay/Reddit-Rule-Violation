@@ -19,6 +19,7 @@ class DataValidationArtifact:
 class DataTransformationArtifact:
     train_obj_file_path: str
     test_obj_file_path: str
+    pad_id_token: int
 
 @dataclass
 class ModelTrainerArtifact:

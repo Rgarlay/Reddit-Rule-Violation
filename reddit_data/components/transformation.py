@@ -2,11 +2,12 @@ from reddit_data.logging.logger import logging
 from reddit_data.exception.exception import CustomException
 import os,sys
 from reddit_data.utils.main_utils.utils import  save_pickle_file
-from reddit_data.utils.main_utils.transformation_utils import CleaningEmbed
+from reddit_data.utils.main_utils.utils import clean_text, get_vocab_size, save_txt_file
 
 import pandas as pd
 from reddit_data.entity.artifact_config import DataValidationArtifact, DataTransformationArtifact
 from reddit_data.entity.entity_config import DataTransformationConfig
+import sentencepiece as spm
 
 class DataTransformation:
     def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config:DataTransformationConfig):
@@ -40,6 +41,56 @@ class DataTransformation:
 
         except Exception as e:
             raise CustomException(e,sys)
+        
+    
+    def training_tokenizer(self, txt_file_path, output_dir_name, vocab_size):        ##Write these 3 into constants
+        '''
+        We train and define the tokenizer here.
+        Output_train_dir will have .vocab and .model obj. 
+        To specify it, just write dir_name/tokenizer.
+        Both objs will autometically save there.
+        Get vocab size from utils
+        '''
+        try:
+            spm.SentencePieceTrainer.train(    
+                input = txt_file_path,
+                model_prefix = output_dir_name,
+                vocab_size = vocab_size,
+                character_coverage = 1,
+                model_type = 'bpe',
+                control_symbols=["<pad>", "<sos>", "<eos>"],
+                hard_vocab_limit=False,
+                byte_fallback = True
+            )
+
+            tokenizer_obj = spm.SentencePieceProcessor()
+            tokenizer_obj.load(output_dir_name)
+            pad_id = tokenizer_obj.piece_to_id("<pad>")#same in both lang.
+
+            return tokenizer_obj, pad_id
+        
+        except Exception as e:
+            raise CustomException(e,sys)
+    
+    def tokenization_of_text(self, tokenizer, file_name: list, pad_id) -> list:
+        '''
+        Here we actually tokenize our text
+        
+        :tokenizer: tokenizer defined in above step
+        :param file_name: list file. It's the one that's cleaned from regex
+        :param pad_id: padding token, Necessary for evevning out the padding
+        :return: {list: padded, integer: max_length}
+        '''
+        try:
+            tokenized_stored = [tokenizer.encode(i,add_bos = True, add_eos = True , out_type = int)
+            for i in file_name]
+            max_length = max(len(x) for x in tokenized_stored)
+            text_tokenized = [x + [pad_id] * (max_length - len(x)) for x in tokenized_stored]
+
+            return text_tokenized, max_length
+        
+        except Exception as e:
+            raise CustomException(e,sys)
             
     def initiate_data_transformation(self):
         try:
@@ -62,36 +113,66 @@ class DataTransformation:
             test_df_concatinated = self.taking_apart_and_concatinating(test_df)
 
             ## Body Text
-            text_column = 'body'
+            body_text = 'body'
             
             logging.info("Cleaning train body text")
-            train_text_file = list(train_df_concatinated[text_column])
+            train_body_text_file = list(train_df_concatinated[body_text])
             logging.info("Cleaning test body text")
-            test_text_file = list(test_df_concatinated[text_column])
+            test_body_text_file = list(test_df_concatinated[body_text])
 
-            clean_and_embed = CleaningEmbed()
+            train_body_text_cleaned = clean_text(train_body_text_file)
+            test_body_text_cleaned = clean_text(test_body_text_file)
 
-            logging.info("Embedding train body text")
-            train_text_cleaned = clean_and_embed.clean_text(train_text_file)
-            train_text_embedded = clean_and_embed.embed_text(train_text_cleaned,padding = 'max_length')
+            body_vocab_size = get_vocab_size(train_body_text_file)
 
-
-            logging.info("Embedding test body text")
-            test_text_cleaned = clean_and_embed.clean_text(test_text_file)
-            test_text_embedded = clean_and_embed.embed_text(test_text_cleaned, padding = 'max_length')
+            logging.info('Saving body text file for tokenization further.') 
             
+            body_text_save_path = self.data_transformation_config.data_transformation_body_cleaned_file_path
+            save_txt_file(train_body_text_cleaned,
+                          body_text_save_path, replace=False)
+            
+            body_tokenizer, pad_id = self.training_tokenizer(text_file_path = body_text_save_path,
+                                    output_dir_name=self.data_transformation_config.data_transformation_artifact_save,
+                                    vocab_size=body_vocab_size)
+            
+            body_training_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
+                                                                     file_name=train_body_text_cleaned,
+                                                                     pad_id=pad_id)
+            
+            body_testing_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
+                                                                    file_name=test_body_text_cleaned,
+                                                                    pad_id=pad_id)
+
+            
+           
+
             ##Rule part
             rule_column = 'rule'
+
             train_rule_file = list(train_df_concatinated[rule_column])
             test_rule_file = list(test_df_concatinated[rule_column])
 
-            logging.info("Embedding train rule text")
+            rule_vocab_size = get_vocab_size(train_rule_file)
 
-            train_rule_embedded = clean_and_embed.embed_text(train_rule_file)
+            rule_text_save_path = self.data_transformation_config.data_transformation_rule_cleaned_file_path
+            save_txt_file(train_rule_file,
+                          rule_text_save_path, replace=False)
+            
+            rule_tokenizer, _ = self.training_tokenizer(text_file_path = rule_text_save_path,
+                                    output_dir_name=self.data_transformation_config.data_transformation_artifact_save,
+                                    vocab_size=body_vocab_size)
+            
+            body_training_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
+                                                                     file_name=train_body_text_cleaned,
+                                                                     pad_id=pad_id)
+            
+            body_testing_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
+                                                                    file_name=test_body_text_cleaned,
+                                                                    pad_id=pad_id)
 
-            logging.info("Embedding test rule text")
-            test_rule_embedded = clean_and_embed.embed_text(test_rule_file)
-        
+
+
+
             train_df_concatinated[text_column] = train_text_embedded
             test_df_concatinated[text_column] = test_text_embedded
 
