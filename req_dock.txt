@@ -3,6 +3,9 @@ torch==2.2.0
 fastapi
 uvicorn
 pandas
+sentencepiece
+spacy
+sentencepiece
 python-multipart
-tokenizers
+
 

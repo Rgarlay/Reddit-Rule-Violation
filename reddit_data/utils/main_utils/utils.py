@@ -6,6 +6,25 @@ import re
 import sentencepiece as spm
 import spacy
 
+def tokenization_of_text(tokenizer, file_name: list, pad_id) -> list:
+        '''
+        Here we actually tokenize our text
+        
+        :tokenizer: tokenizer defined in above step
+        :param file_name: list file. It's the one that's cleaned from regex
+        :param pad_id: padding token, Necessary for evevning out the padding
+        :return: {list: padded, integer: max_length}
+        '''
+        try:
+            tokenized_stored = [tokenizer.encode(i,add_bos = True, add_eos = True , out_type = int)
+            for i in file_name]
+            max_length = max(len(x) for x in tokenized_stored)
+            text_tokenized = [x + [pad_id] * (max_length - len(x)) for x in tokenized_stored]
+
+            return text_tokenized
+        
+        except Exception as e:
+            raise CustomException(e,sys)
 
 
 def load_yaml_file(file_path):

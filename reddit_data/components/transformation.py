@@ -1,7 +1,7 @@
 from reddit_data.logging.logger import logging
 from reddit_data.exception.exception import CustomException
 import os,sys
-from reddit_data.utils.main_utils.utils import  save_pickle_file
+from reddit_data.utils.main_utils.utils import  save_pickle_file, tokenization_of_text
 from reddit_data.utils.main_utils.utils import clean_text, get_vocab_size, save_txt_file
 
 import pandas as pd
@@ -9,7 +9,7 @@ from reddit_data.entity.artifact_config import DataValidationArtifact, DataTrans
 from reddit_data.entity.entity_config import DataTransformationConfig
 import sentencepiece as spm
 
-os.environ["GLOG_minloglevel"] = "2"
+
 
 class DataTransformation:
     def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config:DataTransformationConfig):
@@ -74,25 +74,6 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e,sys)
     
-    def tokenization_of_text(self, tokenizer, file_name: list, pad_id) -> list:
-        '''
-        Here we actually tokenize our text
-        
-        :tokenizer: tokenizer defined in above step
-        :param file_name: list file. It's the one that's cleaned from regex
-        :param pad_id: padding token, Necessary for evevning out the padding
-        :return: {list: padded, integer: max_length}
-        '''
-        try:
-            tokenized_stored = [tokenizer.encode(i,add_bos = True, add_eos = True , out_type = int)
-            for i in file_name]
-            max_length = max(len(x) for x in tokenized_stored)
-            text_tokenized = [x + [pad_id] * (max_length - len(x)) for x in tokenized_stored]
-
-            return text_tokenized
-        
-        except Exception as e:
-            raise CustomException(e,sys)
             
     def initiate_data_transformation(self):
         try:
@@ -142,15 +123,13 @@ class DataTransformation:
                                     output_dir_name=self.data_transformation_config.data_transformation_body_artifact_save,
                                     vocab_size=334)
             
-            body_training_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
+            body_training_text_tokenized = tokenization_of_text(tokenizer=body_tokenizer,
                                                                      file_name=train_body_text_cleaned,
                                                                      pad_id=pad_id)
             
-            body_testing_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
+            body_testing_text_tokenized = tokenization_of_text(tokenizer=body_tokenizer,
                                                                     file_name=test_body_text_cleaned,
                                                                     pad_id=pad_id)
-
-            
            
 
             ##Rule part
@@ -170,11 +149,11 @@ class DataTransformation:
                                     output_dir_name=self.data_transformation_config.data_transformation_rule_artifact_save,
                                     vocab_size=334)
             
-            rule_training_text_tokenized= self.tokenization_of_text(tokenizer=rule_tokenizer,
+            rule_training_text_tokenized= tokenization_of_text(tokenizer=rule_tokenizer,
                                                                      file_name=train_rule_file,
                                                                      pad_id=pad_id)
             
-            rule_testing_text_tokenized = self.tokenization_of_text(tokenizer=rule_tokenizer,
+            rule_testing_text_tokenized = tokenization_of_text(tokenizer=rule_tokenizer,
                                                                     file_name=test_rule_file,
                                                                     pad_id=pad_id)
 
