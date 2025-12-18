@@ -9,6 +9,8 @@ from reddit_data.entity.artifact_config import DataValidationArtifact, DataTrans
 from reddit_data.entity.entity_config import DataTransformationConfig
 import sentencepiece as spm
 
+os.environ["GLOG_minloglevel"] = "2"
+
 class DataTransformation:
     def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config:DataTransformationConfig):
         try:
@@ -42,8 +44,7 @@ class DataTransformation:
         except Exception as e:
             raise CustomException(e,sys)
         
-    
-    def training_tokenizer(self, txt_file_path, output_dir_name, vocab_size):        ##Write these 3 into constants
+    def training_tokenizer(self, text_file_path, output_dir_name, vocab_size):        ##Write these 3 into constants
         '''
         We train and define the tokenizer here.
         Output_train_dir will have .vocab and .model obj. 
@@ -52,8 +53,9 @@ class DataTransformation:
         Get vocab size from utils
         '''
         try:
+            
             spm.SentencePieceTrainer.train(    
-                input = txt_file_path,
+                input = text_file_path,
                 model_prefix = output_dir_name,
                 vocab_size = vocab_size,
                 character_coverage = 1,
@@ -64,7 +66,7 @@ class DataTransformation:
             )
 
             tokenizer_obj = spm.SentencePieceProcessor()
-            tokenizer_obj.load(output_dir_name)
+            tokenizer_obj.load(f"{output_dir_name}.model")
             pad_id = tokenizer_obj.piece_to_id("<pad>")#same in both lang.
 
             return tokenizer_obj, pad_id
@@ -87,7 +89,7 @@ class DataTransformation:
             max_length = max(len(x) for x in tokenized_stored)
             text_tokenized = [x + [pad_id] * (max_length - len(x)) for x in tokenized_stored]
 
-            return text_tokenized, max_length
+            return text_tokenized
         
         except Exception as e:
             raise CustomException(e,sys)
@@ -128,12 +130,17 @@ class DataTransformation:
             logging.info('Saving body text file for tokenization further.') 
             
             body_text_save_path = self.data_transformation_config.data_transformation_body_cleaned_file_path
+
+            os.makedirs(os.path.dirname(os.path.join(self.data_transformation_config.data_transformation_body_cleaned_file_path)), exist_ok=True)
+
+            ### This is for trial run. Comment and subsitute actual full vocab_sizes for full scale model.
+            vocab_size = 334
             save_txt_file(train_body_text_cleaned,
                           body_text_save_path, replace=False)
             
             body_tokenizer, pad_id = self.training_tokenizer(text_file_path = body_text_save_path,
-                                    output_dir_name=self.data_transformation_config.data_transformation_artifact_save,
-                                    vocab_size=body_vocab_size)
+                                    output_dir_name=self.data_transformation_config.data_transformation_body_artifact_save,
+                                    vocab_size=334)
             
             body_training_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
                                                                      file_name=train_body_text_cleaned,
@@ -155,29 +162,27 @@ class DataTransformation:
             rule_vocab_size = get_vocab_size(train_rule_file)
 
             rule_text_save_path = self.data_transformation_config.data_transformation_rule_cleaned_file_path
+
             save_txt_file(train_rule_file,
                           rule_text_save_path, replace=False)
             
             rule_tokenizer, _ = self.training_tokenizer(text_file_path = rule_text_save_path,
-                                    output_dir_name=self.data_transformation_config.data_transformation_artifact_save,
-                                    vocab_size=body_vocab_size)
+                                    output_dir_name=self.data_transformation_config.data_transformation_rule_artifact_save,
+                                    vocab_size=334)
             
-            body_training_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
-                                                                     file_name=train_body_text_cleaned,
+            rule_training_text_tokenized= self.tokenization_of_text(tokenizer=rule_tokenizer,
+                                                                     file_name=train_rule_file,
                                                                      pad_id=pad_id)
             
-            body_testing_text_tokenized = self.tokenization_of_text(tokenizer=body_tokenizer,
-                                                                    file_name=test_body_text_cleaned,
+            rule_testing_text_tokenized = self.tokenization_of_text(tokenizer=rule_tokenizer,
+                                                                    file_name=test_rule_file,
                                                                     pad_id=pad_id)
 
+            train_df_concatinated[body_text] = body_training_text_tokenized
+            test_df_concatinated[body_text] = body_testing_text_tokenized
 
-
-
-            train_df_concatinated[text_column] = train_text_embedded
-            test_df_concatinated[text_column] = test_text_embedded
-
-            train_df_concatinated[rule_column] = train_rule_embedded
-            test_df_concatinated[rule_column] = test_rule_embedded
+            train_df_concatinated[rule_column] = rule_training_text_tokenized
+            test_df_concatinated[rule_column] = rule_testing_text_tokenized
 
             dirname = os.path.dirname(self.data_transformation_config.data_transformed_train_file_path)
 
@@ -194,7 +199,8 @@ class DataTransformation:
             logging.info("Creating final DataTransformationArtifact")
             data_transformation_artifact = DataTransformationArtifact(
                 train_obj_file_path = self.data_transformation_config.data_transformed_train_file_path,
-                test_obj_file_path = self.data_transformation_config.data_transformed_test_file_path
+                test_obj_file_path = self.data_transformation_config.data_transformed_test_file_path,
+                pad_id_token=pad_id
             )
             logging.info("Data transformation completed successfully")
             return data_transformation_artifact

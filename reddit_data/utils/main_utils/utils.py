@@ -43,7 +43,7 @@ def load_pickle_file(file_path):
     except Exception as e:
         raise CustomException(e,sys)
 
-def clean_text(self, text_list: list):
+def clean_text(text_list: list):
 
     try:
         cleaned_list = []

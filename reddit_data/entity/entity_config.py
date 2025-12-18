@@ -64,16 +64,20 @@ class DataTransformationConfig:
                                                              training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
                                                              training_pipeline.DATA_TRANSFORMATION_TEST_FILE_NAME)
         
-        self.data_transformation_body_cleaned_file_path = os.path.join(self.data_transformation_dir, 
-                                                             training_pipeline.DATA_TRANSFORMATION_CLEANED_FILE_DIR,
+        self.data_transformation_cleaned_folder = os.path.join(self.data_transformation_dir, 
+                                                               training_pipeline.DATA_TRANSFORMATION_CLEANED_FILE_DIR)
+        
+        self.data_transformation_body_cleaned_file_path = os.path.join(self.data_transformation_cleaned_folder,
                                                              training_pipeline.TOKEN_AND_VOCAB_BODY_TOKENIZER)
         
-        self.data_transformation_rule_cleaned_file_path = os.path.join(self.data_transformation_dir, 
-                                                             training_pipeline.DATA_TRANSFORMATION_CLEANED_FILE_DIR,
+        self.data_transformation_rule_cleaned_file_path = os.path.join(self.data_transformation_cleaned_folder,
                                                              training_pipeline.TOKEN_AND_VOCAB_RULE_TOKENIZER)
         
-        self.data_transformation_artifact_save = os.path.join(training_config.model_dir, 
-                                                           training_pipeline.MODEL_TRAINER_MODEL_NAME)
+        self.data_transformation_body_artifact_save = os.path.join(training_config.model_dir, 
+                                                           training_pipeline.TOKEN_AND_VOCAB_BODY_TOKENIZER)
+        
+        self.data_transformation_rule_artifact_save = os.path.join(training_config.model_dir, 
+                                                           training_pipeline.TOKEN_AND_VOCAB_RULE_TOKENIZER)
         
 
         ## Uncomment if you want to get preprocessing objects
