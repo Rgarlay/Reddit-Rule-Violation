@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN pip install --no-cache-dir --default-timeout=200 \
     --extra-index-url https://download.pytorch.org/whl/cpu \
-    -r req_dock.txt \
-    transformers
+    -r req_dock.txt
 
 COPY . .
 

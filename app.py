@@ -4,8 +4,8 @@ from fastapi.responses import HTMLResponse
 from uvicorn import run as app_run
 import pandas as pd
 import sys
-from reddit_data.utils.main_utils.utils import clean_text, tokenization_of_text
 import torch
+from reddit_data.utils.main_utils.utils import clean_text, tokenization_of_text
 from reddit_data.exception.exception import CustomException
 from reddit_data.utils.ml_utils.main_ml_utils import ViolationClassifier
 import sentencepiece as spm
@@ -13,13 +13,11 @@ import sentencepiece as spm
 app = FastAPI()
 
 
-
 body_tokenizer_obj = spm.SentencePieceProcessor()
-body_tokenizer_obj.load(r'final_obj\body_tokenizer.model')
+body_tokenizer_obj.load("final_obj/body_tokenizer.model")
 
 rule_tokenizer_obj = spm.SentencePieceProcessor()
-rule_tokenizer_obj.load(r'final_obj\rule_tokenizer.model')
-
+rule_tokenizer_obj.load("final_obj/rule_tokenizer.model")
 pad_id = body_tokenizer_obj.piece_to_id("<pad>")
 
 

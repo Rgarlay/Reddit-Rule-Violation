@@ -1,5 +1,4 @@
 from reddit_data.exception.exception import CustomException
-import yaml
 import os,sys
 import pickle
 import re
@@ -29,6 +28,7 @@ def tokenization_of_text(tokenizer, file_name: list, pad_id) -> list:
 
 def load_yaml_file(file_path):
     try:
+        import yaml
         with open(file_path, 'rb') as file:
             lines = yaml.safe_load(file)
         return lines
@@ -37,6 +37,7 @@ def load_yaml_file(file_path):
 
 def save_yaml_file(file_path, content, replace):
     try:
+        import yaml
         if replace:
             if os.path.exists(file_path):
                 os.remove(file_path)
