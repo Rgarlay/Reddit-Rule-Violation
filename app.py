@@ -24,6 +24,8 @@ pad_id = body_tokenizer_obj.piece_to_id("<pad>")
 # Point to templates folder
 templates = Jinja2Templates(directory="templates")
 # Home route - shows the form
+
+
 @app.get("/home", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(

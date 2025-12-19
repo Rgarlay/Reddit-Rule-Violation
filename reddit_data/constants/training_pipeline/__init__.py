@@ -13,7 +13,8 @@ TEST_FILE_NAME: str = 'test.csv'
 FILE_NAME: str = 'feature.csv'
 TARGET_COL: str = 'rule_violation'
 
-AWS_BUCKET_NAME: str = 'aws-reddit-rule-violation-classification'
+AWS_BUCKET_NAME: str = 'reddit_classifier'
+
 
 '''
 data ingestion constants will begin with DATA_INGESTION
